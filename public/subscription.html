@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Langganan AgniPos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container py-4" style="max-width: 980px">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="agni-brand fs-4">AGNI<span>POS</span> <small class="muted fw-normal fs-6">Langganan</small></div>
+    <button id="btn-logout" class="btn btn-sm btn-outline-light d-none">Keluar</button>
+  </div>
+
+  <div id="msg"></div>
+
+  <div id="loading" class="text-center py-5"><div class="spinner-border" role="status"></div><div class="muted mt-3" id="loading-text">Memuat…</div></div>
+
+  <section id="login" class="d-none mx-auto" style="max-width: 420px">
+    <div class="card"><div class="card-body p-4">
+      <h2 class="h5 mb-1">Masuk untuk melanjutkan</h2>
+      <p class="muted small">Gunakan akun yang sama dengan aplikasi AgniPos. Cara tercepat: buka halaman ini lewat menu <b>Kelola Langganan</b> di aplikasi, Anda otomatis masuk.</p>
+      <div id="login-form"></div>
+    </div></div>
+  </section>
+
+  <section id="main" class="d-none">
+    <div class="card mb-4"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div>
+        <div class="muted small">Status paket</div>
+        <div class="fs-4 fw-bold" id="st-title">-</div>
+        <div class="muted" id="st-detail"></div>
+      </div>
+      <button id="btn-refresh" class="btn btn-outline-light btn-sm">Periksa ulang status</button>
+    </div></div>
+    <div id="notice"></div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4"><div class="card h-100"><div class="card-body">
+        <h2 class="h5">Free</h2><div class="price">Rp0</div><div class="muted small mb-3">Selama akun digunakan</div>
+        <ul class="list-unstyled feat small">
+          <li><span class="ok">✓</span> Kasir, produk &amp; stok</li>
+          <li><span class="ok">✓</span> Servis HP &amp; IMEI</li>
+          <li><span class="ok">✓</span> Pelanggan, pemasok, pembelian</li>
+          <li><span class="ok">✓</span> Kas &amp; ringkasan penjualan</li>
+          <li><span class="no">✕</span> Ekspor PDF/Excel</li>
+          <li><span class="no">✕</span> Laporan lanjutan &amp; scan barcode</li>
+        </ul>
+      </div></div></div>
+      <div class="col-12 col-md-4"><div class="card featured h-100"><div class="card-body d-flex flex-column">
+        <h2 class="h5">Pro Bulanan <span class="badge badge-pro">PRO</span></h2><div class="price" id="price-monthly">Rp19.000</div><div class="muted small mb-3">1 bulan kalender · perpanjangan manual</div>
+        <ul class="list-unstyled feat small mb-3">
+          <li><span class="ok">✓</span> Semua fitur Free</li>
+          <li><span class="ok">✓</span> Ekspor laporan PDF &amp; Excel</li>
+          <li><span class="ok">✓</span> Laporan lanjutan (produk, stok, servis, laba)</li>
+          <li><span class="ok">✓</span> Scan barcode / IMEI</li>
+        </ul>
+        <button class="btn btn-agni mt-auto buy" data-plan="pro_monthly" disabled>Pilih Pro Bulanan</button>
+      </div></div></div>
+      <div class="col-12 col-md-4"><div class="card h-100"><div class="card-body d-flex flex-column">
+        <h2 class="h5">Pro Tahunan <span class="badge badge-pro">PRO</span></h2><div class="price" id="price-yearly">Rp199.000</div><div class="muted small mb-3">12 bulan kalender · perpanjangan manual</div>
+        <ul class="list-unstyled feat small mb-3">
+          <li><span class="ok">✓</span> Semua fitur Pro</li>
+          <li><span class="ok">✓</span> Lebih hemat dibanding 12× bulanan</li>
+        </ul>
+        <button class="btn btn-agni mt-auto buy" data-plan="pro_yearly" disabled>Pilih Pro Tahunan</button>
+      </div></div></div>
+    </div>
+    <p class="muted small">Tidak ada penagihan otomatis. Setelah masa aktif habis, akun kembali ke Free dan semua data usaha Anda tetap tersimpan.</p>
+
+    <div class="card mb-4"><div class="card-body">
+      <h2 class="h6">Punya kode promo komunitas?</h2>
+      <div class="input-group">
+        <input id="promo-code" class="form-control text-uppercase" placeholder="Masukkan kode promo (diawali AGNI-)" maxlength="30" autocomplete="off">
+        <button id="btn-promo" class="btn btn-agni" disabled>Gunakan kode</button>
+      </div>
+      <div class="muted small mt-2">Setiap kode hanya bisa dipakai satu kali dan memberi Pro gratis 2 bulan.</div>
+    </div></div>
+
+    <div class="card mb-4"><div class="card-body">
+      <h2 class="h6">Riwayat pembayaran</h2>
+      <div class="table-responsive"><table class="table table-sm align-middle mb-0"><thead><tr><th>Tanggal</th><th>Paket</th><th>Nominal</th><th>Status</th></tr></thead><tbody id="orders"><tr><td colspan="4" class="muted">Belum ada.</td></tr></tbody></table></div>
+    </div></div>
+
+    <div class="card"><div class="card-body small muted">
+      <b class="text-white">Kembali ke aplikasi:</b> buka lagi aplikasi AgniPos. Status Pro diperbarui otomatis setelah pembayaran dikonfirmasi server. Tombol “Periksa ulang status” bisa dipakai bila belum berubah.
+    </div></div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/common.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  let auth, cfg, snapLoaded = false, busy = false, canPurchase = false, lastData = null;
+
+  // Isi teks selalu lewat textContent (cegah XSS).
+  function banner(kind, text) { const d = document.createElement('div'); d.className = 'alert alert-' + kind; d.setAttribute('role', 'alert'); d.textContent = text; $('msg').replaceChildren(d); }
+  function clearBanner() { $('msg').replaceChildren(); }
+  function show(id) { ['loading', 'login', 'main'].forEach((x) => $(x).classList.toggle('d-none', x !== id)); }
+  function setBusy(b, text) { busy = b; document.querySelectorAll('.buy,#btn-promo').forEach((x) => { x.disabled = b || !canPurchase; }); if (text) $('loading-text').textContent = text; }
+
+  const STATUS_LABEL = { paid: 'Berhasil', pending: 'Menunggu pembayaran', failed: 'Gagal', cancelled: 'Dibatalkan', expired: 'Kedaluwarsa', refunded: 'Dikembalikan' };
+  const STATUS_CLASS = { paid: 'success', pending: 'warning', failed: 'danger', cancelled: 'secondary', expired: 'secondary', refunded: 'info' };
+
+  function render(data) {
+    lastData = data;
+    const s = data.subscription; canPurchase = data.canPurchase;
+    const pro = s.status === 'active';
+    $('st-title').textContent = pro ? 'Paket Pro' : (s.status === 'expired' ? 'Pro berakhir — kembali ke Free' : 'Paket Free');
+    $('st-detail').textContent = pro ? `Aktif sampai ${Agni.fmtDate(s.expiredAt)} (${s.daysLeft} hari lagi)` : (s.status === 'expired' ? `Berakhir pada ${Agni.fmtDate(s.expiredAt)}. Data Anda tetap aman.` : 'Upgrade untuk membuka ekspor & laporan lanjutan.');
+    const n = $('notice'); n.replaceChildren();
+    const add = (kind, t) => { const d = document.createElement('div'); d.className = 'alert alert-' + kind; d.textContent = t; n.appendChild(d); };
+    if (pro && s.daysLeft <= 7) add('warning', `Pro Anda berakhir ${s.daysLeft} hari lagi. Perpanjang sekarang — sisa masa aktif tidak hangus.`);
+    if (s.status === 'expired') add('danger', 'Masa aktif Pro sudah habis. Perpanjang kapan saja untuk membuka fitur Pro lagi.');
+    if (data.orders.some((o) => o.status === 'pending')) add('info', 'Ada pembayaran yang belum selesai. Selesaikan pembayaran sesuai instruksi Midtrans, lalu tekan “Periksa ulang status”.');
+    if (!canPurchase) add('secondary', 'Pembelian dan kode promo hanya dapat dilakukan oleh admin toko.');
+    for (const p of data.plans) { const el = $(p.id === 'pro_monthly' ? 'price-monthly' : 'price-yearly'); if (el) el.textContent = Agni.rupiah(p.price); }
+    document.querySelectorAll('.buy').forEach((b) => { b.textContent = pro ? b.textContent.replace('Pilih', 'Perpanjang') : b.textContent.replace('Perpanjang', 'Pilih'); });
+    setBusy(false);
+    const tb = $('orders'); tb.replaceChildren();
+    if (!data.orders.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 4; td.className = 'muted'; td.textContent = 'Belum ada.'; tr.appendChild(td); tb.appendChild(tr); }
+    for (const o of data.orders) {
+      const tr = document.createElement('tr');
+      [Agni.fmtDate(o.createdAt), o.plan, Agni.rupiah(o.amount)].forEach((t) => { const td = document.createElement('td'); td.textContent = t; tr.appendChild(td); });
+      const td = document.createElement('td'); const b = document.createElement('span'); b.className = 'badge text-bg-' + (STATUS_CLASS[o.status] || 'secondary'); b.textContent = STATUS_LABEL[o.status] || o.status; td.appendChild(b); tr.appendChild(td); tb.appendChild(tr);
+    }
+    show('main');
+  }
+
+  async function loadStatus(refreshOrderId) {
+    const q = refreshOrderId ? '?refresh=' + encodeURIComponent(refreshOrderId) : '';
+    const data = await Agni.apiJson(auth, '/api/subscription/status' + q);
+    render(data);
+    return data;
+  }
+  async function safeLoad(refreshOrderId) {
+    try { return await loadStatus(refreshOrderId); }
+    catch (e) {
+      if (e.status === 401) { banner('warning', 'Sesi berakhir. Silakan masuk lagi.'); show('login'); }
+      else if (e.code === 'no_store') { banner('danger', e.message); show('login'); }
+      else { banner('danger', e.message || 'Gagal memuat status. Periksa koneksi lalu coba lagi.'); show('main'); }
+    }
+  }
+  async function pollAfterPayment(orderId) {
+    // Konfirmasi final tetap dari server (webhook / Status API Midtrans), bukan dari hasil Snap di browser.
+    for (let i = 0; i < 6; i++) {
+      const d = await safeLoad(orderId);
+      if (d && d.subscription.status === 'active' && d.orders.some((o) => o.orderId === orderId && o.status === 'paid')) { banner('success', 'Pembayaran terkonfirmasi. Pro aktif!'); return; }
+      if (d && d.orders.some((o) => o.orderId === orderId && ['failed', 'cancelled', 'expired'].includes(o.status))) { banner('danger', 'Pembayaran tidak berhasil. Anda bisa mencoba lagi.'); return; }
+      await new Promise((r) => setTimeout(r, 2500));
+    }
+    banner('info', 'Pembayaran belum terkonfirmasi. Jika sudah membayar, tunggu beberapa saat lalu tekan “Periksa ulang status”.');
+  }
+  async function loadSnap() {
+    if (snapLoaded) return;
+    await new Promise((ok, fail) => { const s = document.createElement('script'); s.src = cfg.midtrans.snapUrl; s.setAttribute('data-client-key', cfg.midtrans.clientKey); s.onload = ok; s.onerror = () => fail(new Error('Gagal memuat Midtrans')); document.head.appendChild(s); });
+    snapLoaded = true;
+  }
+  async function buy(planId) {
+    if (busy) return;                      // cegah klik ganda
+    clearBanner(); setBusy(true);
+    try {
+      const o = await Agni.apiJson(auth, '/api/subscription/create-order', { method: 'POST', body: { planId } });
+      await loadSnap();
+      window.snap.pay(o.snapToken, {
+        onSuccess: () => pollAfterPayment(o.orderId),
+        onPending: () => { banner('info', 'Menunggu pembayaran. Ikuti instruksi pembayaran, lalu tekan “Periksa ulang status”.'); safeLoad(o.orderId); },
+        onError: () => { banner('danger', 'Pembayaran gagal. Silakan coba lagi.'); safeLoad(o.orderId); },
+        onClose: () => { banner('warning', 'Jendela pembayaran ditutup. Jika Anda sudah membayar, tekan “Periksa ulang status”.'); safeLoad(o.orderId); },
+      });
+    } catch (e) { banner('danger', e.message || 'Gagal memulai pembayaran.'); }
+    finally { setBusy(false); }
+  }
+  async function redeem() {
+    const code = $('promo-code').value.trim();
+    if (!code || busy) return;
+    clearBanner(); setBusy(true);
+    try {
+      const r = await Agni.apiJson(auth, '/api/subscription/redeem-promo', { method: 'POST', body: { code } });
+      $('promo-code').value = '';
+      banner('success', 'Kode promo berhasil! Pro aktif sampai ' + Agni.fmtDate(r.expiredAt) + '.');
+      await safeLoad();
+    } catch (e) { banner('danger', e.message || 'Gagal memakai kode.'); }
+    finally { setBusy(false); }
+  }
+
+  async function start() {
+    try {
+      // Handoff dari aplikasi: kode ada di FRAGMENT (#h=...), tidak ikut terkirim ke server/referer. Hapus segera dari URL.
+      const m = location.hash.match(/^#h=([A-Za-z0-9_-]{40,50})$/);
+      if (m) history.replaceState(null, '', location.pathname + location.search);
+      ({ cfg, auth } = await Agni.initFirebase());
+      Agni.mountLogin(auth, $('login-form'), (t) => banner('danger', t));
+      let handoffDone = !m;
+      auth.onAuthStateChanged(async (u) => {
+        if (!u) {
+          if (!handoffDone) return;
+          $('btn-logout').classList.add('d-none'); show('login'); return;
+        }
+        $('btn-logout').classList.remove('d-none');
+        clearBanner(); show('loading');
+        const order = new URLSearchParams(location.search).get('order');
+        const d = await safeLoad(/^AGNI-[0-9A-Z]{6,12}-[0-9a-f]{8}$/.test(order || '') ? order : undefined);
+        if (order) history.replaceState(null, '', location.pathname);
+        if (d && order) banner('info', 'Status pembayaran diperbarui dari server.');
+      });
+      if (m) {
+        try {
+          const r = await fetch('/api/auth/handoff-redeem', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: m[1] }) });
+          const d = await r.json();
+          if (!r.ok) throw new Error(d.message);
+          await auth.signInWithCustomToken(d.customToken);
+        } catch (e) { banner('warning', 'Tautan dari aplikasi sudah kedaluwarsa. Masuk manual atau buka ulang dari aplikasi.'); }
+        handoffDone = true;
+        if (!auth.currentUser) show('login');
+      }
+    } catch (e) { show('login'); banner('danger', e.message || 'Gagal memuat halaman.'); }
+  }
+  document.querySelectorAll('.buy').forEach((b) => b.addEventListener('click', () => buy(b.dataset.plan)));
+  $('btn-promo').addEventListener('click', redeem);
+  $('promo-code').addEventListener('keydown', (e) => { if (e.key === 'Enter') redeem(); });
+  $('btn-refresh').addEventListener('click', async () => {
+    clearBanner();
+    const pend = lastData && lastData.orders.find((o) => o.status === 'pending');
+    await safeLoad(pend ? pend.orderId : undefined);   // server menanyakan Midtrans untuk order pending
+  });
+  $('btn-logout').addEventListener('click', () => auth && auth.signOut());
+  start();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+:root { --agni-red: #e11d2e; --agni-red-d: #b3121f; --agni-bg: #0b0b0d; --agni-card: #17171b; --agni-line: #2a2a31; }
+html, body { background: var(--agni-bg); color: #f5f5f5; min-height: 100%; }
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.agni-brand { font-weight: 800; letter-spacing: .5px; }
+.agni-brand span { color: var(--agni-red); }
+.card { background: var(--agni-card); border: 1px solid var(--agni-line); color: #f5f5f5; }
+.card.featured { border-color: var(--agni-red); box-shadow: 0 0 0 1px var(--agni-red), 0 10px 30px rgba(225, 29, 46, .15); }
+.btn-agni { background: var(--agni-red); border-color: var(--agni-red); color: #fff; font-weight: 600; }
+.btn-agni:hover, .btn-agni:focus { background: var(--agni-red-d); border-color: var(--agni-red-d); color: #fff; }
+.btn-agni:disabled { opacity: .55; }
+.form-control, .form-control:focus { background: #101014; border-color: var(--agni-line); color: #fff; }
+.form-control::placeholder { color: #777; }
+.price { font-size: 1.9rem; font-weight: 800; }
+.muted { color: #a1a1aa; }
+.feat li { margin-bottom: .35rem; }
+.feat .ok { color: #4ade80; } .feat .no { color: #71717a; }
+.badge-pro { background: var(--agni-red); }
+.table { --bs-table-bg: transparent; --bs-table-color: #f5f5f5; --bs-table-border-color: var(--agni-line); }
+.spinner-border { color: var(--agni-red); }
+.alert { border-radius: .75rem; }
+@media (min-width: 768px) { .price { font-size: 2.2rem; } }
