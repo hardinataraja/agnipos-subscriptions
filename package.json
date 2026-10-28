@@ -1,0 +1,14 @@
+{
+  "name": "agnipos-subscription-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend langganan AgniPos (Vercel Serverless Functions) + halaman subscription.html",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "check": "node scripts/check-syntax.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}
