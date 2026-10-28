@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Admin Promo AgniPos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container py-4" style="max-width: 980px">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="agni-brand fs-4">AGNI<span>POS</span> <small class="muted fw-normal fs-6">Admin Promo</small></div>
+    <button id="btn-logout" class="btn btn-sm btn-outline-light d-none">Keluar</button>
+  </div>
+  <div id="msg"></div>
+  <section id="login" class="mx-auto d-none" style="max-width: 420px"><div class="card"><div class="card-body p-4"><h2 class="h5">Masuk admin</h2><div id="login-form"></div></div></div></section>
+  <section id="main" class="d-none">
+    <div class="card mb-4"><div class="card-body">
+      <h2 class="h6">Buat kampanye (tepat 200 kode)</h2>
+      <div class="row g-2">
+        <div class="col-12 col-md-4"><input id="c-id" class="form-control" placeholder="id-kampanye (mis. komunitas-2026-11)"></div>
+        <div class="col-12 col-md-4"><input id="c-name" class="form-control" placeholder="Nama kampanye"></div>
+        <div class="col-8 col-md-3"><input id="c-until" type="date" class="form-control" title="Batas akhir penukaran"></div>
+        <div class="col-4 col-md-1"><button id="c-create" class="btn btn-agni w-100">Buat</button></div>
+      </div>
+      <div class="muted small mt-2">Setiap kode memberi Pro gratis 2 bulan kalender. Kode tersimpan terenkripsi di server dan hanya bisa dilihat admin.</div>
+    </div></div>
+    <div class="card mb-4"><div class="card-body">
+      <h2 class="h6">Kampanye</h2>
+      <div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>ID</th><th>Nama</th><th>Status</th><th>Terpakai</th><th>Batas</th><th></th></tr></thead><tbody id="camps"></tbody></table></div>
+    </div></div>
+    <div class="card d-none" id="detail"><div class="card-body">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+        <h2 class="h6 mb-0" id="d-title"></h2>
+        <div class="d-flex gap-2">
+          <select id="d-filter" class="form-select form-select-sm"><option value="">Semua</option><option value="unused">Belum dipakai</option><option value="redeemed">Sudah dipakai</option></select>
+          <button id="d-csv" class="btn btn-sm btn-agni">Unduh CSV</button>
+        </div>
+      </div>
+      <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Kode</th><th>Status</th><th>Waktu tukar</th><th>UID</th><th>Toko</th></tr></thead><tbody id="codes"></tbody></table></div>
+    </div></div>
+  </section>
+</div>
+<script src="/common.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  let auth, current = null;
+  const banner = (k, t) => { const d = document.createElement('div'); d.className = 'alert alert-' + k; d.textContent = t; $('msg').replaceChildren(d); };
+  const cell = (tr, t) => { const td = document.createElement('td'); td.textContent = t == null ? '' : t; tr.appendChild(td); return td; };
+
+  async function loadCampaigns() {
+    const d = await Agni.apiJson(auth, '/api/admin/promo-list');
+    const tb = $('camps'); tb.replaceChildren();
+    for (const c of d.campaigns) {
+      const tr = document.createElement('tr');
+      cell(tr, c.campaignId); cell(tr, c.name); cell(tr, c.status); cell(tr, `${c.redeemedCount}/${c.totalCodes}`); cell(tr, Agni.fmtDate(c.validUntil));
+      const td = document.createElement('td'); td.className = 'text-nowrap';
+      const v = document.createElement('button'); v.className = 'btn btn-sm btn-outline-light me-1'; v.textContent = 'Lihat'; v.onclick = () => openCampaign(c.campaignId);
+      td.appendChild(v);
+      if (c.status === 'active') { const x = document.createElement('button'); x.className = 'btn btn-sm btn-outline-danger'; x.textContent = 'Nonaktifkan'; x.onclick = () => disable(c.campaignId); td.appendChild(x); }
+      tr.appendChild(td); tb.appendChild(tr);
+    }
+  }
+  async function openCampaign(id) {
+    current = id;
+    const f = $('d-filter').value;
+    const d = await Agni.apiJson(auth, '/api/admin/promo-list?campaignId=' + encodeURIComponent(id) + (f ? '&status=' + f : ''));
+    $('d-title').textContent = `Kode — ${id} (${d.codes.length})`;
+    const tb = $('codes'); tb.replaceChildren();
+    for (const c of d.codes) { const tr = document.createElement('tr'); cell(tr, c.code).style.fontFamily = 'monospace'; cell(tr, c.status); cell(tr, c.redeemedAt ? Agni.fmtDate(c.redeemedAt) : ''); cell(tr, c.redeemedByUid); cell(tr, c.redeemedStoreId); tb.appendChild(tr); }
+    $('detail').classList.remove('d-none');
+  }
+  async function disable(id) {
+    if (!confirm(`Nonaktifkan kampanye "${id}"? Kode yang belum dipakai tidak bisa ditukar lagi.`)) return;
+    try { await Agni.apiJson(auth, '/api/admin/disable-promo-campaign', { method: 'POST', body: { campaignId: id } }); banner('success', 'Kampanye dinonaktifkan.'); await loadCampaigns(); }
+    catch (e) { banner('danger', e.message); }
+  }
+  async function downloadCsv() {
+    if (!current) return;
+    const res = await Agni.api(auth, '/api/admin/promo-list?format=csv&campaignId=' + encodeURIComponent(current));
+    if (!res.ok) return banner('danger', 'Gagal mengunduh CSV.');
+    const url = URL.createObjectURL(await res.blob());
+    const a = document.createElement('a'); a.href = url; a.download = `promo-${current}.csv`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+  async function enter() {
+    try { await loadCampaigns(); $('login').classList.add('d-none'); $('main').classList.remove('d-none'); }
+    catch (e) { $('main').classList.add('d-none'); banner('danger', e.status === 403 ? 'Akun ini bukan admin promo.' : e.message); }
+  }
+  async function init() {
+    try {
+      ({ auth } = await Agni.initFirebase());
+      Agni.mountLogin(auth, $('login-form'), (t) => banner('danger', t));
+      auth.onAuthStateChanged((u) => { $('btn-logout').classList.toggle('d-none', !u); if (u) enter(); else { $('main').classList.add('d-none'); $('login').classList.remove('d-none'); } });
+    } catch (e) { banner('danger', e.message); }
+  }
+  $('c-create').onclick = async () => {
+    const until = $('c-until').value;
+    try {
+      const r = await Agni.apiJson(auth, '/api/admin/create-promo-campaign', { method: 'POST', body: { campaignId: $('c-id').value.trim(), name: $('c-name').value.trim(), validUntil: until ? new Date(until + 'T23:59:59+07:00').toISOString() : '' } });
+      banner('success', `Kampanye dibuat dengan ${r.totalCodes} kode. Buka “Lihat” lalu “Unduh CSV”.`); await loadCampaigns();
+    } catch (e) { banner('danger', e.message); }
+  };
+  $('d-filter').onchange = () => current && openCampaign(current);
+  $('d-csv').onclick = downloadCsv;
+  $('btn-logout').onclick = () => auth && auth.signOut();
+  init();
+})();
+</script>
+</body>
+</html>
