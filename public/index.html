@@ -140,7 +140,7 @@
   // Isi alamat halaman Kebijakan Privasi & Hapus Akun setelah project privasi di-deploy.
   // Dikosongkan = tautan tidak ditampilkan (tidak ada tautan rusak).
   (function () {
-    var LINKS = { privacy: '', deleteAccount: '' };
+    var LINKS = { privacy: 'https://agnipos-privacy.vercel.app', deleteAccount: 'https://agnipos-privacy.vercel.app/hapus-akun' };
     var box = document.getElementById('legal-links');
     [['privacy', 'Kebijakan Privasi'], ['deleteAccount', 'Hapus Akun']].forEach(function (p) {
       var url = LINKS[p[0]];
