@@ -123,6 +123,15 @@
       </ol>
       <p class="muted small mb-0">Pembelian dan kode promo hanya dapat dilakukan oleh admin atau pemilik toko.</p>
     </section>
+    <section id="komunitas" aria-labelledby="h-komunitas">
+      <div class="card"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+          <h2 id="h-komunitas" class="h6 mb-1">Anggota komunitas AgniPos?</h2>
+          <div class="muted small">Ambil kode promo Pro gratis 2 bulan. Butuh akun admin toko dan password komunitas.</div>
+        </div>
+        <a href="/member-promo.html" class="btn btn-ghost btn-sm" rel="nofollow">Ambil Kode Promo</a>
+      </div></div>
+    </section>
   </main>
 
   <footer class="site">
@@ -140,7 +149,7 @@
   // Isi alamat halaman Kebijakan Privasi & Hapus Akun setelah project privasi di-deploy.
   // Dikosongkan = tautan tidak ditampilkan (tidak ada tautan rusak).
   (function () {
-    var LINKS = { privacy: 'https://agnipos-privacy.vercel.app', deleteAccount: 'https://agnipos-privacy.vercel.app/hapus-akun' };
+    var LINKS = { privacy: '', deleteAccount: '' };
     var box = document.getElementById('legal-links');
     [['privacy', 'Kebijakan Privasi'], ['deleteAccount', 'Hapus Akun']].forEach(function (p) {
       var url = LINKS[p[0]];

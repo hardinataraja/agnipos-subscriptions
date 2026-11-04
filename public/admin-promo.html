@@ -30,7 +30,7 @@
     </div></div>
     <div class="card mb-4"><div class="card-body">
       <h2 class="h6">Kampanye</h2>
-      <div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>ID</th><th>Nama</th><th>Status</th><th>Terpakai</th><th>Batas</th><th></th></tr></thead><tbody id="camps"></tbody></table></div>
+      <div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>ID</th><th>Nama</th><th>Status</th><th>Diambil</th><th>Terpakai</th><th>Batas</th><th></th></tr></thead><tbody id="camps"></tbody></table></div>
     </div></div>
     <div class="card d-none" id="detail"><div class="card-body">
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
@@ -40,7 +40,17 @@
           <button id="d-csv" class="btn btn-sm btn-agni">Unduh CSV</button>
         </div>
       </div>
-      <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Kode</th><th>Status</th><th>Waktu tukar</th><th>UID</th><th>Toko</th></tr></thead><tbody id="codes"></tbody></table></div>
+      <div class="border rounded p-3 mb-3" style="border-color: var(--agni-line) !important">
+        <div class="fw-semibold mb-1">Pengambilan kode oleh member</div>
+        <div class="muted small mb-2">Member mengambil satu kode sendiri di <code>/member-promo.html</code> dengan password kampanye ini. Password disimpan sebagai hash dan tidak bisa dilihat lagi; isi password baru untuk menggantinya.</div>
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-5"><input id="m-pw" type="text" class="form-control form-control-sm" placeholder="Password (8-64 karakter)" autocomplete="off" maxlength="64"></div>
+          <div class="col-6 col-md-3"><button id="m-on" class="btn btn-sm btn-agni w-100">Aktifkan / ganti</button></div>
+          <div class="col-6 col-md-3"><button id="m-off" class="btn btn-sm btn-outline-danger w-100">Matikan</button></div>
+        </div>
+        <div class="small mt-2" id="m-state"></div>
+      </div>
+      <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Kode</th><th>Status</th><th>Waktu tukar</th><th>UID</th><th>Toko</th><th>Diambil toko</th></tr></thead><tbody id="codes"></tbody></table></div>
     </div></div>
   </section>
 </div>
@@ -49,16 +59,17 @@
 (function () {
   'use strict';
   const $ = (id) => document.getElementById(id);
-  let auth, current = null;
+  let auth, current = null, campaignsCache = [];
   const banner = (k, t) => { const d = document.createElement('div'); d.className = 'alert alert-' + k; d.textContent = t; $('msg').replaceChildren(d); };
   const cell = (tr, t) => { const td = document.createElement('td'); td.textContent = t == null ? '' : t; tr.appendChild(td); return td; };
 
   async function loadCampaigns() {
     const d = await Agni.apiJson(auth, '/api/admin/promo-list');
+    campaignsCache = d.campaigns;
     const tb = $('camps'); tb.replaceChildren();
     for (const c of d.campaigns) {
       const tr = document.createElement('tr');
-      cell(tr, c.campaignId); cell(tr, c.name); cell(tr, c.status); cell(tr, `${c.redeemedCount}/${c.totalCodes}`); cell(tr, Agni.fmtDate(c.validUntil));
+      cell(tr, c.campaignId); cell(tr, c.name); cell(tr, c.status); cell(tr, `${c.claimedCount || 0}/${c.totalCodes}`); cell(tr, `${c.redeemedCount}/${c.totalCodes}`); cell(tr, Agni.fmtDate(c.validUntil));
       const td = document.createElement('td'); td.className = 'text-nowrap';
       const v = document.createElement('button'); v.className = 'btn btn-sm btn-outline-light me-1'; v.textContent = 'Lihat'; v.onclick = () => openCampaign(c.campaignId);
       td.appendChild(v);
@@ -72,7 +83,9 @@
     const d = await Agni.apiJson(auth, '/api/admin/promo-list?campaignId=' + encodeURIComponent(id) + (f ? '&status=' + f : ''));
     $('d-title').textContent = `Kode — ${id} (${d.codes.length})`;
     const tb = $('codes'); tb.replaceChildren();
-    for (const c of d.codes) { const tr = document.createElement('tr'); cell(tr, c.code).style.fontFamily = 'monospace'; cell(tr, c.status); cell(tr, c.redeemedAt ? Agni.fmtDate(c.redeemedAt) : ''); cell(tr, c.redeemedByUid); cell(tr, c.redeemedStoreId); tb.appendChild(tr); }
+    for (const c of d.codes) { const tr = document.createElement('tr'); cell(tr, c.code).style.fontFamily = 'monospace'; cell(tr, c.status); cell(tr, c.redeemedAt ? Agni.fmtDate(c.redeemedAt) : ''); cell(tr, c.redeemedByUid); cell(tr, c.redeemedStoreId); cell(tr, c.claimedStoreId); tb.appendChild(tr); }
+    const cm = campaignsCache.find((x) => x.campaignId === id);
+    $('m-state').textContent = cm && cm.memberClaimEnabled ? 'Status: pengambilan member AKTIF.' : 'Status: pengambilan member mati.';
     $('detail').classList.remove('d-none');
   }
   async function disable(id) {
@@ -105,6 +118,16 @@
       banner('success', `Kampanye dibuat dengan ${r.totalCodes} kode. Buka “Lihat” lalu “Unduh CSV”.`); await loadCampaigns();
     } catch (e) { banner('danger', e.message); }
   };
+  async function setMember(enabled) {
+    if (!current) return;
+    try {
+      await Agni.apiJson(auth, '/api/admin/member-claim', { method: 'POST', body: { campaignId: current, enabled, password: enabled ? $('m-pw').value : undefined } });
+      $('m-pw').value = ''; banner('success', enabled ? 'Pengambilan member diaktifkan.' : 'Pengambilan member dimatikan.');
+      await loadCampaigns(); await openCampaign(current);
+    } catch (e) { banner('danger', e.message); }
+  }
+  $('m-on').onclick = () => setMember(true);
+  $('m-off').onclick = () => setMember(false);
   $('d-filter').onchange = () => current && openCampaign(current);
   $('d-csv').onclick = downloadCsv;
   $('btn-logout').onclick = () => auth && auth.signOut();

@@ -42,3 +42,16 @@ test('halaman langganan & admin menautkan logo ke beranda', () => {
     assert.ok(fs.readFileSync(path.join(pub, f), 'utf8').includes('<a href="/" class="agni-brand'), f);
   }
 });
+
+test('landing: tautan Ambil Kode Promo ke halaman member ada (di luar hero) dan file-nya ada', () => {
+  assert.ok(/href="\/member-promo\.html"[^>]*>Ambil Kode Promo</.test(html));
+  assert.ok(fs.existsSync(path.join(pub, 'member-promo.html')));
+  assert.ok(!html.split('id="paket"')[0].includes('member-promo.html'));
+});
+test('halaman member: noindex, tanpa kode/password di sumber, memakai /api/member/claim', () => {
+  const m = fs.readFileSync(path.join(pub, 'member-promo.html'), 'utf8');
+  assert.ok(m.includes('noindex'));
+  assert.ok(m.includes('/api/member/claim'));
+  assert.ok(!/AGNI-[A-HJKMNP-Z2-9]{4}-[A-HJKMNP-Z2-9]{4}-[A-HJKMNP-Z2-9]{4}/.test(m));
+  assert.ok(!/BSSMEMBER/i.test(m));
+});

@@ -1,4 +1,6 @@
 'use strict';
+// Konfigurasi publik untuk halaman web. Sengaja TIDAK memuat kredensial Firebase Admin
+// sehingga tetap bisa menjawab walau env Admin belum benar.
 const cfg = require('../lib/config');
 
 module.exports = (req, res) => {

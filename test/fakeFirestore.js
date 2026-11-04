@@ -28,7 +28,7 @@ class Query {
   limit(n) { return new Query(this.db, this.filt, this.wheres, this.order, n); }
   async get() {
     let rows = [...this.db.docs.entries()].filter(([p]) => this.filt(p)).map(([p, d]) => [p, d])
-      .filter(([, d]) => this.wheres.every(([f, v]) => d[f] === v));
+      .filter(([, d]) => this.wheres.every(([f, v]) => f.split('.').reduce((o, k) => (o == null ? undefined : o[k]), d) === v));
     if (this.order) { const [f, dir] = this.order; rows.sort((a, b) => { const x = +new Date(a[1][f]), y = +new Date(b[1][f]); return dir === 'desc' ? y - x : x - y; }); }
     if (this.lim != null) rows = rows.slice(0, this.lim);
     const docs = rows.map(([p, d]) => new Snap(new DocRef(this.db, p), d));
