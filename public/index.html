@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgniPos - Aplikasi Kasir &amp; Manajemen Konter HP</title>
+  <meta name="description" content="AgniPos: aplikasi kasir, stok, servis HP, kas, dan laporan untuk konter HP dan toko gadget. Cetak struk Bluetooth, paket Free dan Pro.">
+  <meta property="og:title" content="AgniPos - Aplikasi Kasir &amp; Manajemen Konter HP">
+  <meta property="og:description" content="Kasir, stok, servis HP, kas, dan laporan dalam satu aplikasi untuk konter HP.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0b0b0d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0d'/%3E%3Ctext x='32' y='44' font-size='36' font-family='Arial' font-weight='800' text-anchor='middle' fill='%23e11d2e'%3EA%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .hero { padding: 56px 0 40px; text-align: center; }
+    .hero h1 { font-weight: 800; line-height: 1.2; font-size: clamp(1.8rem, 5vw, 2.8rem); }
+    .hero h1 span { color: var(--agni-red); }
+    .hero p.lead { color: #c9c9d1; max-width: 640px; margin: 14px auto 26px; }
+    .btn-xl { padding: 14px 28px; font-size: 1.05rem; border-radius: .8rem; }
+    .btn-ghost { border: 1px solid var(--agni-line); color: #f5f5f5; background: transparent; }
+    .btn-ghost:hover { border-color: var(--agni-red); color: #fff; }
+    section { padding: 36px 0; }
+    section h2 { font-weight: 700; font-size: 1.5rem; margin-bottom: 6px; }
+    .sub { color: #a1a1aa; margin-bottom: 22px; }
+    .fcard { height: 100%; }
+    .fcard h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .fcard p { color: #a1a1aa; margin: 0; font-size: .95rem; }
+    .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .steps li { margin-bottom: .6rem; }
+    footer.site { border-top: 1px solid var(--agni-line); margin-top: 28px; padding: 18px 0 30px; font-size: .85rem; color: #8b8b94; }
+    footer.site a { color: #8b8b94; text-decoration: none; }
+    footer.site a:hover { color: #fff; text-decoration: underline; }
+    .sep { margin: 0 8px; opacity: .5; }
+    .tablewrap { overflow-x: auto; }
+  </style>
+</head>
+<body>
+<div class="container" style="max-width: 980px">
+
+  <header class="py-3 d-flex justify-content-between align-items-center">
+    <div class="agni-brand fs-4">AGNI<span>POS</span></div>
+    <a href="/subscription.html" class="btn btn-sm btn-ghost">Kelola Langganan</a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="judul">
+      <h1 id="judul">Kasir &amp; manajemen <span>konter HP</span> dalam satu aplikasi</h1>
+      <p class="lead">Catat penjualan, kelola stok, tangani servis HP, pantau kas, dan cetak struk Bluetooth, dari HP maupun tablet.</p>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a href="/subscription.html" class="btn btn-agni btn-xl">Kelola Langganan</a>
+        <a href="#paket" class="btn btn-ghost btn-xl">Lihat Paket</a>
+      </div>
+    </section>
+
+    <section id="fitur" aria-labelledby="h-fitur">
+      <h2 id="h-fitur">Yang bisa Anda lakukan</h2>
+      <p class="sub">Dirancang untuk kebutuhan harian konter HP dan toko gadget.</p>
+      <div class="row g-3">
+        <div class="col-12 col-sm-6 col-md-4"><div class="card fcard"><div class="card-body">
+          <div class="icon" aria-hidden="true">🛒</div><h3>Kasir cepat</h3>
+          <p>Pilih produk, hitung kembalian otomatis, tahan transaksi, dan dukungan diskon.</p></div></div></div>
+        <div class="col-12 col-sm-6 col-md-4"><div class="card fcard"><div class="card-body">
+          <div class="icon" aria-hidden="true">📦</div><h3>Produk &amp; stok</h3>
+          <p>Harga dan stok dalam satu tempat. Stok berkurang otomatis saat transaksi berhasil.</p></div></div></div>
+        <div class="col-12 col-sm-6 col-md-4"><div class="card fcard"><div class="card-body">
+          <div class="icon" aria-hidden="true">🔧</div><h3>Servis HP</h3>
+          <p>Catat keluhan, biaya, dan status pengerjaan. Cetak tanda terima dan serah terima.</p></div></div></div>
+        <div class="col-12 col-sm-6 col-md-4"><div class="card fcard"><div class="card-body">
+          <div class="icon" aria-hidden="true">💰</div><h3>Kas &amp; shift</h3>
+          <p>Buka dan tutup kas per shift, lengkap dengan pengecekan selisih.</p></div></div></div>
+        <div class="col-12 col-sm-6 col-md-4"><div class="card fcard"><div class="card-body">
+          <div class="icon" aria-hidden="true">📊</div><h3>Laporan</h3>
+          <p>Ringkasan penjualan harian dan per periode, serta laporan produk, stok, dan servis.</p></div></div></div>
+        <div class="col-12 col-sm-6 col-md-4"><div class="card fcard"><div class="card-body">
+          <div class="icon" aria-hidden="true">🖨️</div><h3>Struk Bluetooth</h3>
+          <p>Printer thermal 58 mm dan 80 mm, dengan alamat toko, nomor transaksi, kasir, dan pelanggan.</p></div></div></div>
+      </div>
+    </section>
+
+    <section id="paket" aria-labelledby="h-paket">
+      <h2 id="h-paket">Paket Free dan Pro</h2>
+      <p class="sub">Mulai gratis. Upgrade ke Pro saat usaha Anda membutuhkan laporan dan ekspor lanjutan.</p>
+      <div class="row g-3">
+        <div class="col-12 col-md-4"><div class="card h-100"><div class="card-body">
+          <h3 class="h5">Free</h3><div class="price">Rp0</div><div class="muted small mb-3">Selama akun digunakan</div>
+          <ul class="list-unstyled feat small mb-0">
+            <li><span class="ok">✓</span> Kasir, produk &amp; stok</li>
+            <li><span class="ok">✓</span> Servis HP</li>
+            <li><span class="ok">✓</span> Kas &amp; ringkasan penjualan</li>
+            <li><span class="ok">✓</span> Cetak struk Bluetooth</li>
+            <li><span class="no">✕</span> Ekspor PDF/Excel</li>
+            <li><span class="no">✕</span> Laporan lanjutan &amp; scan barcode</li>
+            <li><span class="no">✕</span> Struk tanpa watermark</li>
+          </ul></div></div></div>
+        <div class="col-12 col-md-4"><div class="card featured h-100"><div class="card-body d-flex flex-column">
+          <h3 class="h5">Pro Bulanan <span class="badge badge-pro">PRO</span></h3><div class="price">Rp19.000</div><div class="muted small mb-3">1 bulan kalender</div>
+          <ul class="list-unstyled feat small mb-3">
+            <li><span class="ok">✓</span> Semua fitur Free</li>
+            <li><span class="ok">✓</span> Ekspor laporan &amp; stok PDF/Excel</li>
+            <li><span class="ok">✓</span> Laporan lanjutan (produk, stok, servis)</li>
+            <li><span class="ok">✓</span> Scan barcode / IMEI</li>
+            <li><span class="ok">✓</span> Struk tanpa watermark</li>
+          </ul>
+          <a href="/subscription.html" class="btn btn-agni mt-auto">Pilih Pro Bulanan</a></div></div></div>
+        <div class="col-12 col-md-4"><div class="card h-100"><div class="card-body d-flex flex-column">
+          <h3 class="h5">Pro Tahunan <span class="badge badge-pro">PRO</span></h3><div class="price">Rp199.000</div><div class="muted small mb-3">12 bulan kalender</div>
+          <ul class="list-unstyled feat small mb-3">
+            <li><span class="ok">✓</span> Semua fitur Pro</li>
+            <li><span class="ok">✓</span> Lebih hemat dibanding 12× bulanan</li>
+          </ul>
+          <a href="/subscription.html" class="btn btn-agni mt-auto">Pilih Pro Tahunan</a></div></div></div>
+      </div>
+      <p class="muted small mt-3 mb-0">Perpanjangan manual, tanpa penagihan otomatis. Setelah masa Pro berakhir, akun kembali ke Free dan semua data usaha tetap tersimpan.</p>
+    </section>
+
+    <section id="cara" aria-labelledby="h-cara">
+      <h2 id="h-cara">Cara berlangganan</h2>
+      <ol class="steps">
+        <li>Buka <a href="/subscription.html">Kelola Langganan</a> dan masuk dengan akun yang sama dengan aplikasi AgniPos.</li>
+        <li>Pilih Pro Bulanan atau Pro Tahunan, lalu selesaikan pembayaran lewat Midtrans.</li>
+        <li>Buka kembali aplikasi AgniPos. Status Pro aktif otomatis setelah pembayaran dikonfirmasi.</li>
+      </ol>
+      <p class="muted small mb-0">Pembelian dan kode promo hanya dapat dilakukan oleh admin atau pemilik toko.</p>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>© 2026 Musika RH Studio</div>
+      <div id="footer-links">
+        <span id="legal-links"></span>
+        <a href="/admin-promo.html" rel="nofollow">Admin</a><span class="sep">·</span><a href="https://wa.me/6282111887939" target="_blank" rel="noopener">WhatsApp Support</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Isi alamat halaman Kebijakan Privasi & Hapus Akun setelah project privasi di-deploy.
+  // Dikosongkan = tautan tidak ditampilkan (tidak ada tautan rusak).
+  (function () {
+    var LINKS = { privacy: '', deleteAccount: '' };
+    var box = document.getElementById('legal-links');
+    [['privacy', 'Kebijakan Privasi'], ['deleteAccount', 'Hapus Akun']].forEach(function (p) {
+      var url = LINKS[p[0]];
+      if (!/^https:\/\//.test(url)) return;
+      var a = document.createElement('a'); a.href = url; a.textContent = p[1]; a.rel = 'noopener';
+      var s = document.createElement('span'); s.className = 'sep'; s.textContent = '·';
+      box.appendChild(a); box.appendChild(s);
+    });
+  })();
+</script>
+</body>
+</html>
