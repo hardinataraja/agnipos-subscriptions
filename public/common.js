@@ -27,15 +27,29 @@
     if (!res.ok) { const e = new Error(data.message || 'Terjadi kesalahan. Coba lagi.'); e.code = data.error; e.status = res.status; throw e; }
     return data;
   }
+  // Tombol tampilkan/sembunyikan password agar tidak salah ketik.
+  function attachToggle(input, btn) {
+    if (!input || !btn) return;
+    btn.addEventListener('click', () => {
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.textContent = show ? 'Sembunyikan' : 'Tampilkan';
+      btn.setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password');
+      btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+    });
+  }
   function mountLogin(auth, el, onError) {
     el.innerHTML = `
       <div class="mb-3"><label class="form-label">Email</label><input id="lg-email" type="email" class="form-control" autocomplete="username"></div>
-      <div class="mb-3"><label class="form-label">Password</label><input id="lg-pass" type="password" class="form-control" autocomplete="current-password"></div>
+      <div class="mb-3"><label class="form-label" for="lg-pass">Password</label>
+        <div class="input-group"><input id="lg-pass" type="password" class="form-control" autocomplete="current-password">
+        <button type="button" id="lg-toggle" class="btn btn-outline-light" aria-label="Tampilkan password" aria-pressed="false">Tampilkan</button></div></div>
       <button id="lg-btn" class="btn btn-agni w-100 mb-2">Masuk</button>
       <button id="lg-google" class="btn btn-outline-light w-100">Masuk dengan Google</button>`;
+    attachToggle(el.querySelector('#lg-pass'), el.querySelector('#lg-toggle'));
     const fail = (e) => onError(e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found' ? 'Email atau password salah.' : 'Gagal masuk. Coba lagi.');
     el.querySelector('#lg-btn').onclick = () => auth.signInWithEmailAndPassword(el.querySelector('#lg-email').value.trim(), el.querySelector('#lg-pass').value).catch(fail);
     el.querySelector('#lg-google').onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(fail);
   }
-  window.Agni = { load, rupiah, fmtDate, initFirebase, api, apiJson, mountLogin };
+  window.Agni = { load, rupiah, fmtDate, initFirebase, api, apiJson, mountLogin, attachToggle };
 })();

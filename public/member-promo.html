@@ -37,7 +37,8 @@
       <h2 class="h6" id="form-title">Ambil kode promo</h2>
       <p class="muted small">Masukkan password komunitas yang dibagikan admin. Satu toko hanya bisa mengambil satu kode per kampanye.</p>
       <div class="input-group">
-        <input id="pw" type="password" class="form-control" placeholder="Password komunitas" autocomplete="off" maxlength="64">
+        <input id="pw" type="password" class="form-control" placeholder="Password komunitas" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="64" aria-label="Password komunitas">
+        <button type="button" id="btn-toggle-pw" class="btn btn-outline-light" aria-label="Tampilkan password" aria-pressed="false">Tampilkan</button>
         <button id="btn-claim" class="btn btn-agni">Ambil Kode</button>
       </div>
     </div></div>
@@ -136,6 +137,7 @@
       });
     } catch (e) { show('login'); banner('danger', e.message || 'Gagal memuat halaman.'); }
   }
+  Agni.attachToggle($('pw'), $('btn-toggle-pw'));
   $('btn-claim').addEventListener('click', claim);
   $('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') claim(); });
   $('btn-logout').addEventListener('click', () => auth && auth.signOut());
