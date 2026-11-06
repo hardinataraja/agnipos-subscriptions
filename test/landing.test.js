@@ -55,3 +55,11 @@ test('halaman member: noindex, tanpa kode/password di sumber, memakai /api/membe
   assert.ok(!/AGNI-[A-HJKMNP-Z2-9]{4}-[A-HJKMNP-Z2-9]{4}-[A-HJKMNP-Z2-9]{4}/.test(m));
   assert.ok(!/BSSMEMBER/i.test(m));
 });
+
+test('tombol tampilkan/sembunyikan password ada di halaman member dan form login', () => {
+  const m = fs.readFileSync(path.join(pub, 'member-promo.html'), 'utf8');
+  const c = fs.readFileSync(path.join(pub, 'common.js'), 'utf8');
+  assert.ok(m.includes('id="btn-toggle-pw"') && m.includes("Agni.attachToggle($('pw')"));
+  assert.ok(c.includes('id="lg-toggle"') && c.includes('function attachToggle'));
+  assert.ok(c.includes('id="lg-pass"'));                       // id lama dipertahankan
+});
