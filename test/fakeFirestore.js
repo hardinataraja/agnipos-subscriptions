@@ -1,6 +1,7 @@
 'use strict';
 // Firestore palsu in-memory untuk uji logika. Mendukung subset yang dipakai backend.
 // Transaksi diserialkan (mutex) => memodelkan atomisitas; ini BUKAN pengganti emulator Firestore.
+let autoId = 0;
 const SERVER_TS = { __serverTimestamp: true };
 const FieldValue = { serverTimestamp: () => SERVER_TS };
 
@@ -37,7 +38,7 @@ class Query {
 }
 class CollRef extends Query {
   constructor(db, path) { super(db, (p) => p.startsWith(path + '/') && !p.slice(path.length + 1).includes('/')); this.path = path; this.id = path.split('/').pop(); }
-  doc(id) { return new DocRef(this.db, `${this.path}/${id}`); }
+  doc(id) { return new DocRef(this.db, `${this.path}/${id || 'auto' + (++autoId).toString(36) + Math.random().toString(36).slice(2, 8)}`); }
   get parent() { const s = this.path.split('/'); return s.length > 1 ? new DocRef(this.db, s.slice(0, -1).join('/')) : null; }
 }
 class FakeDb {
